@@ -1,7 +1,9 @@
 package com.example.demo.Model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,8 +21,10 @@ public class ProductEntity {
     @NotBlank(message = "İsim boş olamaz.")
     private String name;
 
+    @Positive(message = "Fiyat sıfırdan büyük olmalıdır.")
     private BigDecimal price; //para hesabı kesin ve ondalıklı olsun diye
 
+    @Min(value = 0, message = "Stok negatif olamaz.")
     @Column(name = "stock_quantity")
     private Integer stockQuantity;
 

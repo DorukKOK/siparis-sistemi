@@ -2,6 +2,7 @@ package com.example.demo.Controller;
 import com.example.demo.Model.ProductEntity;
 import com.example.demo.Service.CategoryService;
 import com.example.demo.Service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class ProductController {
         return productService.getProductById(id);
     }
     @PostMapping("/{categoryId}")
-    public ProductEntity createProduct(@RequestBody ProductEntity product,@PathVariable Long categoryId){
+    public ProductEntity createProduct(@Valid @RequestBody ProductEntity product, @PathVariable Long categoryId){
         return productService.createProduct(product, categoryId);
     }
     @PutMapping("/{id}")
