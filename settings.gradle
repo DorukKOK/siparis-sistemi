@@ -1,0 +1,2 @@
+rootProject.name = 'SiparisSistemi'
+include 'UserService', 'ProductService', 'OrderService'

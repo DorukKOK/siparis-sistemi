@@ -1,0 +1,68 @@
+services:
+  postgres-user:
+    image: postgres
+    environment:
+      POSTGRES_DB: user_db
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-user-data:/var/lib/postgresql/data
+
+  postgres-product:
+    image: postgres
+    environment:
+      POSTGRES_DB: product_db
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-product-data:/var/lib/postgresql/data
+
+  postgres-order:
+    image: postgres
+    environment:
+      POSTGRES_DB: order_db
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-order-data:/var/lib/postgresql/data
+
+  user-service:
+    build: ./UserService
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres-user
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-user:5432/user_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+
+  product-service:
+    build: ./ProductService
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres-product
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-product:5432/product_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+
+  order-service:
+    build: ./OrderService
+    ports:
+      - "8083:8083"
+    depends_on:
+      - postgres-order
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-order:5432/order_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+
+volumes:
+  postgres-user-data:
+  postgres-product-data:
+  postgres-order-data:
