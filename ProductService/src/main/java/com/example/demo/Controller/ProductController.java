@@ -10,8 +10,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+
+
+
     private final ProductService productService;
-    private final CategoryService categoryService;
+    private  final CategoryService categoryService;
 
     public ProductController(ProductService productService, CategoryService categoryService) {
         this.productService = productService;
@@ -25,6 +28,9 @@ public class ProductController {
     public ProductEntity getProductById(@PathVariable Long id){
         return productService.getProductById(id);
     }
+
+
+
     @PostMapping("/{categoryId}")
     public ProductEntity createProduct(@Valid @RequestBody ProductEntity product, @PathVariable Long categoryId){
         return productService.createProduct(product, categoryId);
