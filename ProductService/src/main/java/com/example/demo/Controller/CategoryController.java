@@ -1,7 +1,10 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Model.CategoryEntity;
+import com.example.demo.Model.CategoryRequest;
+import com.example.demo.Model.CategoryResponse;
 import com.example.demo.Service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,20 +18,20 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
     @GetMapping()
-    public List<CategoryEntity> getAllCategories(){
+    public List<CategoryResponse> getAllCategories(){
         return categoryService.getAllCategories();
     }
     @GetMapping("/{id}")
-    public CategoryEntity getCategoryById(@PathVariable Long id){
+    public CategoryResponse getCategoryById(@PathVariable Long id){
         return categoryService.getCategoryById(id);
     }
     @PostMapping()
-    public CategoryEntity createCategory(@RequestBody CategoryEntity category){
-        return categoryService.createCategory(category) ;
+    public CategoryResponse createCategory(@Valid @RequestBody CategoryRequest category){
+        return categoryService.createCategory(category);
     }
     @PutMapping("/{id}")
-    public CategoryEntity updateCategory(@PathVariable Long id,@RequestBody CategoryEntity category){
-        return categoryService.updateCategory(id, category);
+    public CategoryResponse updateCategory(@PathVariable Long id,@Valid @RequestBody CategoryRequest category){
+        return categoryService.updateCategory(id,category);
     }
 
     @DeleteMapping("/{id}")
