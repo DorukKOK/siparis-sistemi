@@ -1,6 +1,6 @@
 services:
   postgres-user:
-    image: postgres
+    image: postgres:17
     environment:
       POSTGRES_DB: user_db
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -10,7 +10,7 @@ services:
       - postgres-user-data:/var/lib/postgresql/data
 
   postgres-product:
-    image: postgres
+    image: postgres:17
     environment:
       POSTGRES_DB: product_db
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -20,7 +20,7 @@ services:
       - postgres-product-data:/var/lib/postgresql/data
 
   postgres-order:
-    image: postgres
+    image: postgres:17
     environment:
       POSTGRES_DB: order_db
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
