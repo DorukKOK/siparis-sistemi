@@ -1,4 +1,5 @@
 package com.example.demo.api.exception;
+
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +15,12 @@ import java.util.NoSuchElementException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     //Kayıt bulunamadı --> 404
-    //Service katmanında throw ederken geliyor hata mesajı
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<String> handleNotFound(NoSuchElementException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+
     //Validation hatası --> 400
-    //Entitydeki anotasyonlardan geliyor hata mesajı
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String,String>> handleValidation(MethodArgumentNotValidException ex){
         Map<String,String> errors = new HashMap<>();
@@ -29,12 +29,20 @@ public class GlobalExceptionHandler {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
-    //Veritabanı kısıtlama ihlali --> 500
+
+    //Kategori adı zaten mevcut --> 409
+    @ExceptionHandler(DuplicateCategoryException.class)
+    public ResponseEntity<String> handleDuplicateCategory(DuplicateCategoryException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    //Veritabanı kısıtlama ihlali --> 409
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<String> handleDataIntegrity(DataIntegrityViolationException ex){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Böyle bir ürün yok.");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Veri bütünlüğü kısıtı ihlal edildi.");
     }
-    //Beklenmedik durumlar -->500
+
+    //Beklenmedik durumlar --> 500
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleAll(Exception ex){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Beklenmeyen bir hata oluştu.");

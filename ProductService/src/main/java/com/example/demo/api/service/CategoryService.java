@@ -1,10 +1,13 @@
 package com.example.demo.api.service;
 
+import com.example.demo.api.exception.DuplicateCategoryException;
 import com.example.demo.api.model.CategoryEntity;
 import com.example.demo.api.request.CategoryRequest;
 import com.example.demo.api.response.CategoryResponse;
 import com.example.demo.api.repository.CategoryRepository;
+
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -32,6 +35,10 @@ public class CategoryService {
     }
 
     public CategoryResponse createCategory(CategoryRequest request){
+        if (categoryRepository.existsByNameIgnoreCase(request.getName())) {
+            throw new DuplicateCategoryException("Bu isimde bir kategori zaten var: " + request.getName());
+        }
+
         CategoryEntity category = new CategoryEntity();
         category.setName(request.getName());
 
@@ -42,6 +49,10 @@ public class CategoryService {
     public CategoryResponse updateCategory(Long id, CategoryRequest request){
         CategoryEntity existingCategory = categoryRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Böyle bir kategori yok"));
+
+        if (categoryRepository.existsByNameIgnoreCaseAndIdNot(request.getName(), id)){
+            throw new DuplicateCategoryException("Bu isimde bir kategori zaten mevcut"+request);
+        }
 
         existingCategory.setName(request.getName());
 
@@ -56,7 +67,7 @@ public class CategoryService {
         categoryRepository.deleteById(id);
     }
 
-    // ---- Entity → Response çevirici ----
+    //Entity → Response çevirici
     private CategoryResponse toResponse(CategoryEntity category) {
         CategoryResponse response = new CategoryResponse();
         response.setId(category.getId());
