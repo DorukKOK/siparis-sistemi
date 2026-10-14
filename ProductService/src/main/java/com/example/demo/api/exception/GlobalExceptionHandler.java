@@ -37,7 +37,10 @@ public class GlobalExceptionHandler {
     //Kategori adı zaten mevcut --> 409
     @ExceptionHandler(DuplicateCategoryException.class)
     public ResponseEntity<String> handleDuplicateCategory(DuplicateCategoryException ex){
-        log.warn("Kategori çakışması: {}",ex.getMessage());
+        log.atWarn()
+                .addKeyValue("eventCode", "CATEGORY_DUPLICATE")
+                .addKeyValue("categoryName", ex.getCategoryName())
+                .log("Kategori çakışması");
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
