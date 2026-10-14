@@ -36,7 +36,7 @@ public class CategoryService {
 
     public CategoryResponse createCategory(CategoryRequest request){
         if (categoryRepository.existsByNameIgnoreCase(request.getName())) {
-            throw new DuplicateCategoryException("Bu isimde bir kategori zaten var: " + request.getName());
+            throw new DuplicateCategoryException(request.getName());
         }
 
         CategoryEntity category = new CategoryEntity();
@@ -51,7 +51,7 @@ public class CategoryService {
                 .orElseThrow(() -> new NoSuchElementException("Böyle bir kategori yok"));
 
         if (categoryRepository.existsByNameIgnoreCaseAndIdNot(request.getName(), id)){
-            throw new DuplicateCategoryException("Bu isimde bir kategori zaten mevcut"+request);
+            throw new DuplicateCategoryException(request.getName());
         }
 
         existingCategory.setName(request.getName());
